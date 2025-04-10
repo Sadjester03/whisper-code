@@ -2,140 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Whisper Code Prototype</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3208/3208707.png">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #0e0e1a;
-      color: #eee;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-      opacity: 0;
-      transition: opacity 2s ease;
-    }
-
-    h1 {
-      color: #b2a4ff;
-    }
-
-    .glyphs, .sentence, .journal {
-      margin: 1rem 0;
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .glyph {
-      font-size: 2rem;
-      background: #1e1e2e;
-      padding: 1rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    .glyph:hover {
-      background: #363650;
-      transform: scale(1.1);
-    }
-
-    button {
-      margin-top: 1rem;
-      padding: 0.6rem 1rem;
-      background: #8e8eff;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .journal {
-      flex-direction: column;
-      background: #1a1a2f;
-      padding: 1rem;
-      border-radius: 10px;
-      max-width: 400px;
-    }
-
-    .clue {
-      background: #222244;
-      padding: 1rem;
-      border-radius: 10px;
-      margin: 1rem;
-      max-width: 400px;
-      text-align: center;
-      font-style: italic;
-    }
-
-    .completed {
-      font-size: 1.2rem;
-      color: #9fff9f;
-      margin-top: 1rem;
-      background: #143314;
-      padding: 1rem;
-      border-radius: 10px;
-    }
-
-    .controls {
-      margin-top: 2rem;
-    }
-
-    #loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #0e0e1a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    #loader span {
-      color: #b2a4ff;
-      font-size: 1.5rem;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { opacity: 0.3; }
-      50% { opacity: 1; }
-      100% { opacity: 0.3; }
-    }
-  </style>
+  <meta name="theme-color" content="#b2a4ff">
+  <link rel="manifest" href="manifest.json">
+  <title>Whisper Code</title>
 </head>
 <body>
-  <div id="loader"><span>Loading Whisper Code...</span></div>
-  <h1>Whisper Code</h1>
-  <!-- Rest of your body content stays the same -->
-
-  <script>
-    const loader = document.getElementById('loader');
-
-    function preloadAudio(tracks, callback) {
-      let loaded = 0;
-      tracks.forEach(track => {
-        track.oncanplaythrough = () => {
-          loaded++;
-          if (loaded === tracks.length) callback();
-        };
-      });
-    }
-
-    window.onload = () => {
-      preloadAudio(ambientTracks, () => {
-        loader.style.display = 'none';
-        document.body.style.opacity = '1';
-        playDefaultMusic();
-        updateClue();
-        updateGlyphDisplay();
-        updateJournal();
-      });
-    }
-  </script>
+  <!-- Your existing body content goes here -->
 </body>
 </html>
+
+
+manifest.json:
+```json
+{
+  "name": "Whisper Code",
+  "short_name": "Whisper",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e0e1a",
+  "theme_color": "#b2a4ff",
+  "description": "A cozy puzzle adventure where you decode symbols to unlock secrets.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3208/3208707.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "id": "/",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
+}
+```
+
+sw.js:
+```js
+const cacheName = 'whisper-cache-v1';
+const assets = [
+  '/',
+  'index.html',
+  'manifest.json',
+  'sw.js',
+  'https://cdn-icons-png.flaticon.com/512/3208/3208707.png'
+];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(cacheName).then(cache => cache.addAll(assets))
+  );
+});
+
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(res => res || fetch(e.request))
+  );
+});
+```
+
+➡️ Push these updates to GitHub, then recheck on PWABuilder.
