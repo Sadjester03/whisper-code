@@ -1,0 +1,21 @@
+{
+  "name": "Whisper Code",
+  "short_name": "Whisper",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e0e1a",
+  "theme_color": "#b2a4ff",
+  "description": "A cozy puzzle adventure where you decode symbols to unlock secrets.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3208/3208707.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "id": "/",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
+}
